@@ -23,7 +23,7 @@ Currently in active development. MVP goal:
    ```bash
    git clone https://github.com/YOUR_USERNAME/parkingbooker.git
    cd parkingbooker
-````
+   ```
 
 2. **Install dependencies:**
 

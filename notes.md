@@ -27,6 +27,7 @@ create table availabilities (
   created_at timestamp with time zone default now()
 );
 
+
 -- BOOKINGS table (when someone books an available slot)
 create table bookings (
   id uuid primary key default uuid_generate_v4(),

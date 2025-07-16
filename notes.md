@@ -1,4 +1,5 @@
-## Canonical Schema + Indexes (DB execution) ```sql
+## Canonical Schema + Indexes (DB execution) 
+```sql
 -- USERS table (basic info)
 create table users (
   id uuid primary key default uuid_generate_v4(),

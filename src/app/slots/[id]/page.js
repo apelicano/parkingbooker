@@ -1,4 +1,3 @@
-// src/app/slot/[id]/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 export default function SlotDetailsPage() {
-  const { id } = useParams(); // ⬅️ Now a hook, not a server param
+  const { id } = useParams();
   const [slot, setSlot] = useState(null);
   const [availabilities, setAvailabilities] = useState([]);
   const [status, setStatus] = useState('');
@@ -22,7 +21,11 @@ export default function SlotDetailsPage() {
           availabilities (
             id,
             available_from,
-            available_until
+            available_until,
+            bookings (
+              id,
+              status
+            )
           )
         `)
         .eq('id', id)
@@ -71,22 +74,31 @@ export default function SlotDetailsPage() {
 
       <h2 className="text-xl font-semibold mt-6">Availability Windows</h2>
       <ul className="space-y-2">
-        {availabilities.map((a) => (
-          <li key={a.id} className="border p-4 rounded shadow space-y-1">
-            <p>From: {new Date(a.available_from).toLocaleString()}</p>
-            <p>Until: {new Date(a.available_until).toLocaleString()}</p>
-            <button
-              onClick={() => bookSlot(a.id)}
-              className="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Book Now
-            </button>
-          </li>
-        ))}
+        {availabilities.map((a) => {
+          const isBooked = a.bookings?.some(
+            (b) => b.status === 'pending' || b.status === 'confirmed'
+          );
+
+          return (
+            <li key={a.id} className="border p-4 rounded shadow space-y-1">
+              <p>From: {new Date(a.available_from).toLocaleString()}</p>
+              <p>Until: {new Date(a.available_until).toLocaleString()}</p>
+              {!isBooked ? (
+                <button
+                  onClick={() => bookSlot(a.id)}
+                  className="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Book Now
+                </button>
+              ) : (
+                <p className="text-sm text-gray-500 italic">Already booked</p>
+              )}
+            </li>
+          );
+        })}
       </ul>
 
       {status && <p className="mt-4 font-semibold">{status}</p>}
     </div>
   );
 }
-
